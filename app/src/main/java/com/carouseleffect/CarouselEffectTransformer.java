@@ -1,7 +1,9 @@
 package com.carouseleffect;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 
 public class CarouselEffectTransformer implements ViewPager.PageTransformer {
@@ -23,15 +25,19 @@ public class CarouselEffectTransformer implements ViewPager.PageTransformer {
         int offsetX = centerXInViewPager - viewPager.getMeasuredWidth() / 2;
         float offsetRate = (float) offsetX * 0.38f / viewPager.getMeasuredWidth();
         float scaleFactor = 1 - Math.abs(offsetRate);
+
         if (scaleFactor > 0) {
             view.setScaleX(scaleFactor);
             view.setScaleY(scaleFactor);
             view.setTranslationX(-maxTranslateOffsetX * offsetRate);
+            //ViewCompat.setElevation(view, 0.0f);
         }
+        ViewCompat.setElevation(view, scaleFactor);
+
     }
 
     /**
-     * dp和像素转换
+     * Dp to pixel conversion
      */
     private int dp2px(Context context, float dipValue) {
         float m = context.getResources().getDisplayMetrics().density;
