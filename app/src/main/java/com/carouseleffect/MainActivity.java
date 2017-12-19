@@ -1,9 +1,13 @@
 package com.carouseleffect;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -11,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewpagerTop, viewPagerBackground;
     public static final int ADAPTER_TYPE_TOP = 1;
     public static final int ADAPTER_TYPE_BOTTOM = 2;
+    public static final String EXTRA_IMAGE = "image";
+    public static final String EXTRA_TRANSITION_IMAGE = "image";
 
     private int[] listItems = {R.mipmap.img1, R.mipmap.img2, R.mipmap.img3, R.mipmap.img4,
             R.mipmap.img5, R.mipmap.img6, R.mipmap.img7, R.mipmap.img8, R.mipmap.img9, R.mipmap.img10};
@@ -84,7 +90,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.linMain:
                 if (view.getTag() != null) {
                     int poisition = Integer.parseInt(view.getTag().toString());
-                    Toast.makeText(getApplicationContext(), "Poistion: " + poisition, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), "Poistion: " + poisition, Toast.LENGTH_LONG).show();
+
+                    Intent intent=new Intent(this,FullScreenActivity.class);
+                    intent.putExtra(EXTRA_IMAGE,listItems[poisition]);
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view.findViewById(R.id.imageCover), EXTRA_TRANSITION_IMAGE);
+                    ActivityCompat.startActivity(this, intent, options.toBundle());
                 }
                 break;
         }

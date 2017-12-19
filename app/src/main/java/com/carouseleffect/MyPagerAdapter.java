@@ -42,7 +42,7 @@ public class MyPagerAdapter extends PagerAdapter{
                     break;
             }
 
-            Glide.with(context)
+            GlideApp.with(context)
                     .load(listItems[position])
                     .into(imageCover);
 
