@@ -3,10 +3,10 @@ Carousel Effect with ViewPager
 
 ![GifSample](https://github.com/bhaveshjabuvani-credencys/CarouselEffect/blob/master/CarouselEffectDemo.gif?raw=true)
 
+[<img src="/Store/google-play-badge.png" height="116" width="300">](https://play.google.com/store/apps/details?id=com.carouseleffect)
+
 #### Usage:
 Simply add two ViewPager in FrameLayout (1. Top ViewPager for CarouselEffect, 2. Background ViewPager)
-
-[<img src="/Store/google-play-badge.png" height="116" width="300">](https://play.google.com/store/apps/details?id=com.carouseleffect)
 
 Set Top ViewPager padding left and right so previsous and next item display and also set android:clipToPadding="false" 
 
