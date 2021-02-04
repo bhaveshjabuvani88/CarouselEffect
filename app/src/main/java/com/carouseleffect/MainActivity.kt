@@ -1,103 +1,90 @@
-package com.carouseleffect;
+package com.carouseleffect
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.content.Intent
+import android.os.Bundle
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import com.carouseleffect.databinding.ActivityMainBinding
 
-public class MainActivity extends AppCompatActivity {
+class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
 
-    private ViewPager viewpagerTop, viewPagerBackground;
-    public static final int ADAPTER_TYPE_TOP = 1;
-    public static final int ADAPTER_TYPE_BOTTOM = 2;
-    public static final String EXTRA_IMAGE = "image";
-    public static final String EXTRA_TRANSITION_IMAGE = "image";
+    private val listItems = intArrayOf(R.mipmap.img1, R.mipmap.img2, R.mipmap.img3, R.mipmap.img4,
+            R.mipmap.img5, R.mipmap.img6, R.mipmap.img7, R.mipmap.img8, R.mipmap.img9, R.mipmap.img10)
 
-    private int[] listItems = {R.mipmap.img1, R.mipmap.img2, R.mipmap.img3, R.mipmap.img4,
-            R.mipmap.img5, R.mipmap.img6, R.mipmap.img7, R.mipmap.img8, R.mipmap.img9, R.mipmap.img10};
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        init();
-        setupViewPager();
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding=ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        init()
+        setupViewPager()
     }
 
     /**
      * Initialize all required variables
      */
-    private void init() {
-        viewpagerTop = (ViewPager) findViewById(R.id.viewpagerTop);
-        viewPagerBackground = (ViewPager) findViewById(R.id.viewPagerbackground);
+    private fun init() {
 
-        viewpagerTop.setClipChildren(false);
-        viewpagerTop.setPageMargin(getResources().getDimensionPixelOffset(R.dimen.pager_margin));
-        viewpagerTop.setOffscreenPageLimit(3);
-        viewpagerTop.setPageTransformer(false, new CarouselEffectTransformer(this)); // Set transformer
+        binding.viewpagerTop.clipChildren = false
+        binding.viewpagerTop.pageMargin = resources.getDimensionPixelOffset(R.dimen.pager_margin)
+        binding.viewpagerTop.offscreenPageLimit = 3
+        binding.viewpagerTop.setPageTransformer(false, CarouselEffectTransformer(this)) // Set transformer
     }
 
     /**
      * Setup viewpager and it's events
      */
-    private void setupViewPager() {
+    private fun setupViewPager() {
         // Set Top ViewPager Adapter
-        MyPagerAdapter adapter = new MyPagerAdapter(this, listItems, ADAPTER_TYPE_TOP);
-        viewpagerTop.setAdapter(adapter);
+        val adapter = MyPagerAdapter( listItems, ADAPTER_TYPE_TOP)
+        binding.viewpagerTop.adapter = adapter
 
         // Set Background ViewPager Adapter
-        MyPagerAdapter adapterBackground = new MyPagerAdapter(this, listItems, ADAPTER_TYPE_BOTTOM);
-        viewPagerBackground.setAdapter(adapterBackground);
-
-
-        viewpagerTop.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            private int index = 0;
-
-            @Override
-            public void onPageSelected(int position) {
-                index = position;
-
+        val adapterBackground = MyPagerAdapter(listItems, ADAPTER_TYPE_BOTTOM)
+        binding.viewPagerbackground.adapter = adapterBackground
+        binding.viewpagerTop.addOnPageChangeListener(object : OnPageChangeListener {
+            private var index = 0
+            override fun onPageSelected(position: Int) {
+                index = position
             }
 
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                int width = viewPagerBackground.getWidth();
-                viewPagerBackground.scrollTo((int) (width * position + width * positionOffset), 0);
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                val width = binding.viewPagerbackground.width
+                binding.viewPagerbackground.scrollTo((width * position + width * positionOffset).toInt(), 0)
             }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
+            override fun onPageScrollStateChanged(state: Int) {
                 if (state == ViewPager.SCROLL_STATE_IDLE) {
-                    viewPagerBackground.setCurrentItem(index);
+                    binding.viewPagerbackground.currentItem = index
                 }
-
             }
-        });
+        })
     }
 
     /**
      * Handle all click event of activity
      */
-    public void clickEvent(View view) {
-        switch (view.getId()) {
-            case R.id.linMain:
-                if (view.getTag() != null) {
-                    int poisition = Integer.parseInt(view.getTag().toString());
-                    //Toast.makeText(getApplicationContext(), "Poistion: " + poisition, Toast.LENGTH_LONG).show();
-
-                    Intent intent=new Intent(this,FullScreenActivity.class);
-                    intent.putExtra(EXTRA_IMAGE,listItems[poisition]);
-                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view.findViewById(R.id.imageCover), EXTRA_TRANSITION_IMAGE);
-                    ActivityCompat.startActivity(this, intent, options.toBundle());
-                }
-                break;
+    fun clickEvent(view: View) {
+        when (view.id) {
+            R.id.imageCover -> if (view.tag != null) {
+                val position = view.tag.toString().toInt()
+                //Toast.makeText(getApplicationContext(), "Poistion: " + poisition, Toast.LENGTH_LONG).show();
+                val intent = Intent(this, FullScreenActivity::class.java)
+                intent.putExtra(EXTRA_IMAGE, listItems[position])
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view.findViewById(R.id.imageCover), EXTRA_TRANSITION_IMAGE)
+                ActivityCompat.startActivity(this, intent, options.toBundle())
+            }
         }
+    }
+
+    companion object {
+        const val ADAPTER_TYPE_TOP = 1
+        const val ADAPTER_TYPE_BOTTOM = 2
+        const val EXTRA_IMAGE = "image"
+        const val EXTRA_TRANSITION_IMAGE = "image"
     }
 }

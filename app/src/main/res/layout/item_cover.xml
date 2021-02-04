@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relCoverFlow"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent">
-
-    <LinearLayout
-        android:id="@+id/linMain"
+    android:background="@android:color/transparent">-->
+    <ImageView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/imageCover"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:onClick="clickEvent">
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/img1"
+        android:onClick="clickEvent"
+        android:visibility="visible"/>
 
-        <ImageView
-            android:id="@+id/imageCover"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            android:visibility="visible"/>
-    </LinearLayout>
-
-</RelativeLayout>
+<!--</RelativeLayout>-->

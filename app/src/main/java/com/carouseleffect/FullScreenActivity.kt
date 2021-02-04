@@ -1,43 +1,45 @@
-package com.carouseleffect;
+package com.carouseleffect
 
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.ImageView;
+import android.graphics.drawable.Drawable
+import android.os.Binder
+import android.os.Build
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.carouseleffect.databinding.ActivityFullScreenBinding
+import com.carouseleffect.util.GlideApp
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+class FullScreenActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityFullScreenBinding
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityFullScreenBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        init()
+    }
 
-public class FullScreenActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_full_screen);
-
-        ImageView imgFull=findViewById(R.id.imgFull);
-
+    private fun init() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            imgFull.setTransitionName(MainActivity.EXTRA_TRANSITION_IMAGE);
+            binding.imgFull.transitionName = MainActivity.EXTRA_TRANSITION_IMAGE
+        supportPostponeEnterTransition()
         GlideApp.with(this)
-                .load(getIntent().getIntExtra(MainActivity.EXTRA_IMAGE,0))
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        supportStartPostponedEnterTransition();
-                        return false;
+                .load(intent.getIntExtra(MainActivity.EXTRA_IMAGE, 0))
+                .listener(object : RequestListener<Drawable?> {
+                    override fun onLoadFailed(e: GlideException?, model: Any, target: Target<Drawable?>, isFirstResource: Boolean): Boolean {
+                        supportStartPostponedEnterTransition()
+                        return false
                     }
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        supportStartPostponedEnterTransition();
-                        return false;
+                    override fun onResourceReady(resource: Drawable?, model: Any, target: Target<Drawable?>, dataSource: DataSource, isFirstResource: Boolean): Boolean {
+                        supportStartPostponedEnterTransition()
+                        return false
                     }
                 })
-                .into(imgFull);
+                .into(binding.imgFull)
     }
 }

@@ -1,7 +1,7 @@
-package com.carouseleffect;
+package com.carouseleffect.util
 
-import com.bumptech.glide.annotation.GlideModule;
-import com.bumptech.glide.module.AppGlideModule;
+import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.module.AppGlideModule
 
 @GlideModule
-public final class MyAppGlideModule extends AppGlideModule {}
+class MyAppGlideModule : AppGlideModule()

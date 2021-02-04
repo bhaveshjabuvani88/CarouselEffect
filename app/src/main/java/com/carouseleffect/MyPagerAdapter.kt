@@ -1,73 +1,41 @@
-package com.carouseleffect;
+package com.carouseleffect
 
-import android.content.Context;
-import android.support.v4.view.PagerAdapter;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.annotation.DrawableRes
+import androidx.viewpager.widget.PagerAdapter
+import com.carouseleffect.databinding.ItemCoverBinding
+import com.carouseleffect.util.GlideApp
 
-import com.bumptech.glide.Glide;
-
-
-public class MyPagerAdapter extends PagerAdapter{
-
-    Context context;
-    int[] listItems;
-    int adapterType;
-
-    public MyPagerAdapter(Context context, int[] listItems, int adapterType) {
-        this.context = context;
-        this.listItems = listItems;
-        this.adapterType=adapterType;
-    }
-
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_cover, null);
-        try {
-
-            LinearLayout linMain = (LinearLayout) view.findViewById(R.id.linMain);
-            ImageView imageCover = (ImageView) view.findViewById(R.id.imageCover);
-            linMain.setTag(position);
-
-            switch (adapterType)
-            {
-                case MainActivity.ADAPTER_TYPE_TOP:
-                    linMain.setBackgroundResource(R.drawable.shadow);
-                    break;
-                case MainActivity.ADAPTER_TYPE_BOTTOM:
-                    linMain.setBackgroundResource(0);
-                    break;
+class MyPagerAdapter(private val listItems: IntArray, var adapterType: Int) : PagerAdapter() {
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        val binding = ItemCoverBinding.inflate(LayoutInflater.from(container.context), null, false).apply {
+            imageCover.tag = position
+            when (adapterType) {
+                MainActivity.ADAPTER_TYPE_TOP -> imageCover.setBackgroundResource(R.drawable.shadow)
+                MainActivity.ADAPTER_TYPE_BOTTOM -> imageCover.setBackgroundResource(0)
             }
-
-            GlideApp.with(context)
+            GlideApp.with(root)
                     .load(listItems[position])
-                    .into(imageCover);
-
-            container.addView(view);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+                    .into(imageCover)
+            container.addView(root)
         }
-
-        return view;
+        return binding.root
     }
 
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((View) object);
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        container.removeView(`object` as View)
     }
 
-    @Override
-    public int getCount() {
-        return listItems.length;
+    override fun getCount(): Int {
+        return listItems.size
     }
 
-    @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return (view == object);
+    override fun isViewFromObject(view: View, `object`: Any): Boolean {
+        return view === `object`
     }
-
 }
